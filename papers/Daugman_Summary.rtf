@@ -1,0 +1,57 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang16393\deflangfe16393{\fonttbl{\f0\fswiss\fprq2\fcharset0 Calibri;}{\f1\fswiss\fprq2 Calibri;}{\f2\fnil\fcharset2 Symbol;}}
+{\colortbl ;\red0\green0\blue255;}
+{\*\generator Riched20 6.3.9600}{\*\mmathPr\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+\pard\nowidctlpar\sa200\sl276\slmult1\f0\fs22\lang9 IRIS RECOGNITION\par
+According to the biometric literature, the iris's structural texture is substantially diverse across the population. Even the irides of monozygotic twins exhibit structural differences, suggesting that random events impact the tissue's morphogenesis.[1] Large-scale testing has confirmed the potential to identify individuals from a large database of iris patterns. Recent experiments conducted on a database of 632,500 iris images\f1\emdash 316,250 persons spanning 152 nationalities\emdash suggest the possibility of a decision policy that could yield a zero false-match rate.However, this rate is predicated on the quality of the iris image, which must be strictly monitored to ensure reasonable textural clarity. Tests that the National Institute of Standards and Technology conducted in 2006 involving a broad range of image quality suggest that the false-nonmatch rate of the best-performing iris recognition algorithms can vary between 1.1 to 1.4 percent at a false match rate of 0.1 percent.\par
+References\par
+J. Daugman and C. Downing, \ldblquote Epigenetic Randomness, Complexity, and Singularity of Human Iris Patterns,\rdblquote  Proc. Royal Soc., vol. B, no. 268, Biological Sciences, 2001, pp. 1737\endash 1740. J. Daugman, \ldblquote Probing the Uniqueness and Randomness of Iris Codes: Results from 200 Billion Iris Pair Comparisons,\rdblquote  Proc. IEEE, vol. 94, no. 11, 2006, pp. 1927\endash 1935. P. J. Phillips , FRVT 2006 and ICE 2006 Large-Scale Results, NISTIR 7408, Nat'l Inst. Standards and Technology, 2007; {{\field{\*\fldinst{HYPERLINK http://iris.nist.gov/ice/ice2006.htm }}{\fldrslt{http://iris.nist.gov/ice/ice2006.htm\ul0\cf0}}}}\f1\fs22 .\f0\par
+Iris Recognition consists of 3 steps:\par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\sa200\sl276\slmult1 Iris Segmentation\par
+{\pntext\f2\'B7\tab}Iris Normalization\par
+{\pntext\f2\'B7\tab}Feature Encoding\par
+
+\pard{\*\pn\pnlvlcont\pnf2\pnindent0{\pntxtb\'B7}}\nowidctlpar\sa200\sl276\slmult1\par
+1.) Iris Segmentation: \par
+a.) Hough Transform: Horizontal edge map and vertical edge map.\par
+b.) Daugman Transform: Integro-Differential Operator. In this, for each pixel as center, we calculate the radius for which there is a maximum change in the  sum of circumferential pixels. The integral operator acts as summation and differential operator tells us the max rate of change of summation with radius.\par
+At every pixel, the normalized sum of all circumferential pixel values, at increasing radius is found. At every level of increased radius, the \tab difference between the normalized sums of pixel intensity values at adjacent radii circle is noted. After the entire search, summation and differentiation in the calculating process, that pixel is stated to be the centre pixel of the iris where the change in sum of circumferential pixels intensity values between two adjacent contours is the greatest.\par
+Before applying Daugman, some pre-processing ethods are used:\par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\sa200\sl276\slmult1  motion blurring, camera diffusion, noise, out-offocus imaging, occlusion from eyelids or eyelashes, head tilting, off-axis gaze or camera angle, specular reflection,poor contrast, and natural luminosity factors\par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\sa200\sl276\slmult1 Countering Light refection: Causes loss of info in that area. Also, it may lead to wrong boundary detection. So to solve it, we use morpological operations (like averaging). For eg, in matlab we use imfill and imcomplement. 1st we use imcomplement to take image complement. Then we use imfill(which fills hole i.e. area of dark pixel surrounded by light pixel); then again take imcomplement.\par
+{\pntext\f2\'B7\tab}Thresholding: In this we assume that centre of our circular boundary will lie in iris or pupil region. So we define a threhold say t; then we will apply daugman's eqn only on those pixels(as center)  whose value is less than t.\par
+{\pntext\f2\'B7\tab}Locally Minimum intensity pixel (3x3 neighbourhood) is used for calculations.\par
+{\pntext\f2\'B7\tab}Assuming that iris boundarylies totally inside image: This means that for a assumed center pixel, the circular contour search is stopped at the radius at which a complete circle of pixels is unable to be formed since the contour pixels coordinates lie outside the coordinates range limited by the image dimension\par
+
+\pard{\*\pn\pnlvlcont\pnf2\pnindent0{\pntxtb\'B7}}\nowidctlpar\sa200\sl276\slmult1 After applying Daugman: \par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\sa200\sl276\slmult1 Eyelash Detection: Separable eyelash detected using 1D gabor filter. Multiple eyelashes are detected using variance of the local region.\par
+{\pntext\f2\'B7\tab}Eyelids isolation: Canny edge detection in horizontal direction also gives eyelids. This can be followed by linear Hough Transform.\par
+{\pntext\f2\'B7\tab}Occlusion by eyelid: Many times upper and lower part of iris gets covered by eyelids which may cause error in iris detection by daugman method. For that, instead of using circular contour in daugman operator, we can use arc as contour; (0 to 45, 135 to 225 and 315 to 360 degrees).\par
+{\pntext\f2\'B7\tab}Finding Pupil Center: Given that iris center has been found. We observe in 10x10 neighborhood of iris center (by applying Daugman method). Further reduction in complexity can be achieved by thresholding. Pupil radius is within 10 to 80 percent of iris outer radius.\par
+
+\pard\nowidctlpar\sa200\sl276\slmult1 2.) Iris Normalization: We want to transform the iris region so that it has fixed dimensions in order to compare with others. Therefore same iris under different conditions will have charac features at same location.\par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\sa200\sl276\slmult1 Daugman\rquote s Rubber sheet model: in this we convert x,y to polar coordinates with pupil as center.\par
+
+\pard\nowidctlpar\li720\sa200\sl276\slmult1 Center of the pupil is taken as a reference point. Many radial vectors are passed through the iris region. Some data points are selected on these radial lines. If center of pupil is not the iris center then a remapping formulae is applied.\par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\sa200\sl276\slmult1 Rotational accounting: For this, we use image registration//////////////LATER////////\par
+
+\pard\nowidctlpar\sa200\sl276\slmult1\par
+3.) Encoding:\par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\sa200\sl276\slmult1 Wavelet Transform: It is a type of time-frequency transformation. Actually it is in time-scale domain but we can convert it to t-f. Scale controls both duration and bandwidth of the signal. In FT, basis functions are fixed (sine and cos) so sometimes it becomes difficult to take FT of a time domain signal. It would be better if our basis functions were similar to the actual function. This concept is used in wavelet Transform. Its 2 basis orthogonal functions are: Scaling and Wavelet functions. Scaling function captures the average behaviour of dataset (low pass) and Wavelet detects the differences (high pass). Wavelet function is scaled to obtain daughter wavelets which are othogonal to all the other functions.\par
+
+\pard\nowidctlpar\sa200\sl276\slmult1\tab Also,FT tells us the frequency components present in the signal but it doesn't tell that \tab when were they present (time). But wavelet transfrom tells us that too.\par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\sa200\sl276\slmult1 Haar or Multiresolution or some other wavelet transform is used to extract feature along with gabor filter. Then conparisson is done using HD or FBD etc.\par
+{\pntext\f2\'B7\tab}Iris is passed through wavelet filters which is furthur encoded.\par
+{\pntext\f2\'B7\tab}Gabor Filter: sine/cos wave modulated by a gaussian fucntion. Sine/cos are localised in freq but when they are modulated with gaussian function the localisation in space inc and in freq dec. Gabor filter output is demodulated to compress the data. Phase info is quantized into 4 levels.\par
+
+\pard\nowidctlpar\sa200\sl276\slmult1\tab\tab\tab  \par
+\tab\tab  \par
+}
+ 

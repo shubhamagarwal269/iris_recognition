@@ -1,0 +1,17 @@
+﻿The Rubber Sheet model maps the coordinates of each Cartesian point from the segmented iris region to polar coordinates (r,θ) where r ranges from 0 to 1 and θ ranges  
+from 0 2π. In diﬀerent eye images from the same subject, changes in the iris pattern occur due
+to pupil dilation or constriction. The conversion to a dimensionless form also ensures
+the iris pattern is not inﬂuenced by magniﬁcation and image distance acquisition factors.
+John Daugman’s rubber sheet model ensures the proper handling of the matter due to
+the speciﬁcs of the iris. It accounts size inconsistencies and pupil dilation, but does not
+compensate for rotational inconsistencies [15]. These can be eliminated at the matching
+stage with simple bit-shifting of the encoded iris template.
+The points between the inner and outer iris boundaries are interpolated
+linearly by a homogeneous rubber sheet model, which automatically reverses
+the iris pattern deformations caused by pupillary dilation or constriction. Un-
+der assumptions of uniform iris elasticity (which may be questionable), this
+normalization maps the iris tissue into a doubly-dimensionless coordinate sys-
+tem. The homogeneous rubber sheet model assigns to each point in the iris,
+regardless of iris size in the image and of pupillary dilation, a pair of dimen-
+sionless real coordinates r,θwhere rlies in the unit interval [0,1] and θis the
+angular variable, cyclic over [0 : 2π].
